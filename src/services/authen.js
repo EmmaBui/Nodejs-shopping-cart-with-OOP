@@ -32,7 +32,7 @@ class AuthenService {
             }
         } catch (err) {
             if (err instanceof MyError.MyError) throw err;
-            throw MyError.cannotCreateEntity(`${this.tableName} Service`, this.tableName, err);
+            throw MyError.badRequest(`Authentication Service`, `Sign up fail!`, err);
         }
     }
 

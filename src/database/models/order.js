@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes, Model) => {
             allowNull: false,
             primaryKey: true
         },
+        total: {
+            type: DataTypes.DOUBLE,
+            allowNull: false,
+            defaultValue: 0
+        },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false,

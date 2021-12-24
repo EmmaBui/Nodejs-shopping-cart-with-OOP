@@ -17,7 +17,7 @@ class ShopService extends BaseService {
             }
         } catch (err) {
             if (err instanceof MyError.MyError) throw err;
-            throw MyError.cannotGetEntity(`${tableName} Service`, `Cart`, err);
+            throw MyError.cannotGetEntity(`${this.tableName} Service`, `Cart`, err);
         }
     }
 
@@ -41,14 +41,14 @@ class ShopService extends BaseService {
 
             const newAddProduct = await this.repository.getProduct(itemId);
 
-            cart.addProduct(newAddProduct, { through: { quantity: newQuantity }});
+            cart.addProduct(newAddProduct, { through: { quantity: newQuantity, price: newAddProduct.price }});
 
             return {
                 addedProduct: newAddProduct
             }
         } catch (err) {
             if (err instanceof MyError.MyError) throw err;
-            throw MyError.unauthorized(`${tableName} Service`, `Unauthorized!`, err)
+            throw MyError.unauthorized(`${this.tableName} Service`, `Unauthorized!`, err)
         }
     }
 
@@ -77,7 +77,7 @@ class ShopService extends BaseService {
             }
         } catch (err) {
             if (err instanceof MyError.MyError) throw err;
-            throw MyError.unauthorized(`${tableName} Service`, `Unauthorized!`, err);
+            throw MyError.unauthorized(`${this.tableName} Service`, `Unauthorized!`, err);
         }
     }
 
@@ -94,7 +94,7 @@ class ShopService extends BaseService {
             }
         } catch (err) {
             if (err instanceof MyError.MyError) throw err;
-            throw MyError.unauthorized(`${tableName} Service`, `Unauthorized!`, err);
+            throw MyError.unauthorized(`${this.tableName} Service`, `Unauthorized!`, err);
         }
     }
 
@@ -112,19 +112,28 @@ class ShopService extends BaseService {
             const order = await user.createOrder();
             
             const orderDetail = await order.addProducts(
-                existProducts.map(product => { product.OrderDetail = { quantity: product.CartItem.quantity };
+                existProducts.map(product => { 
+                    product.OrderDetail = { quantity: product.CartItem.quantity, price: product.CartItem.price };
                     return product;
-                }
-            ));
+                })
+            );
+
+            let total = 0;
+            orderDetail.forEach(p => {
+                total += p.quantity * p.price;
+            });
+
+            order.update({total: total}, { where : { id: order.id }})
 
             cart.setProducts(null)
 
             return {
+                total: total,
                 orderDetail: orderDetail
             }
         } catch (err) {
             if (err instanceof MyError.MyError) throw err;
-            throw MyError.unauthorized(`${tableName} Service`, `Unauthorized!`, err);
+            throw MyError.unauthorized(`${this.tableName} Service`, `Unauthorized!`, err);
         }
     }
 

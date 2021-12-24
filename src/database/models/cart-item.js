@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes, Model) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        price: {
+            type: DataTypes.DOUBLE,
+            allowNull: false,
+        },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false,
