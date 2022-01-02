@@ -73,7 +73,7 @@ class ShopService extends BaseService {
             product.CartItem.destroy();
 
             return {
-                deletedProduct: product.id 
+                deletedProductId: product.id 
             }
         } catch (err) {
             if (err instanceof MyError.MyError) throw err;

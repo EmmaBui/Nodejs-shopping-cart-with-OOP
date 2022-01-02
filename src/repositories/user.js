@@ -1,5 +1,5 @@
 const BaseRepository = require('./base');
-const defaultFields = ['name', 'email', 'password', 'role', 'createdAt', 'updatedAt'];
+const defaultFields = ['name', 'email', 'role', 'createdAt', 'updatedAt'];
 
 class UserRepository extends BaseRepository {
     constructor(models) {
