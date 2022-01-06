@@ -48,9 +48,7 @@ class AuthenService {
 
             if (!userExist) throw MyError.badRequest(`Authentication Service`, "User is not found!");
 
-            const [checkPassword, userSession] = await Promise.all([
-                Hash.compareHash(itemPassword, userExist.password)
-            ]);
+            const checkPassword = await Hash.compareHash(itemPassword, userExist.password);
 
             if (!checkPassword) throw MyError.badRequest(`Authentication Service`, "Invalid password!");
 
